@@ -2,7 +2,7 @@ CREATE KEYSPACE bd WITH replication = {'class': 'SimpleStrategy', 'replication_f
 
 USE bd;
 
-consistency;
+consistency quorum;
 
 CREATE TABLE producto (
 	id int PRIMARY KEY, 
