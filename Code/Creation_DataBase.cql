@@ -1,11 +1,12 @@
 CREATE KEYSPACE bd WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'} AND durable_writes = 'true';
 
-USE bd
+USE bd;
 
 CREATE TABLE producto (
 	id int PRIMARY KEY, 
-	nombre text, 
-	precio float, 
+	nombre text,
+	precio float,
+	tipo text,
 	stock int, 
 	descripcion text
 );
