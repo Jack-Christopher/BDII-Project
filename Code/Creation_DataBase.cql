@@ -2,6 +2,8 @@ CREATE KEYSPACE bd WITH replication = {'class': 'SimpleStrategy', 'replication_f
 
 USE bd;
 
+consistency;
+
 CREATE TABLE producto (
 	id int PRIMARY KEY, 
 	nombre text,
