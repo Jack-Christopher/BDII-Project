@@ -12,7 +12,6 @@
   <link rel="shortcut icon" type="image/jpg" href="{{ url_for('static',filename='Images/icon.jpg') }}">
     
 <title> Únete a Tienda XYZ </title>
-<link rel="stylesheet" href="../CSS_Files/register.css">
 
 </head>
 
@@ -40,40 +39,50 @@
     <br><br>
 
     <div class="container">
-    <table class="table">
-      <thead class="table-light">
-        <tr>
-          <th>Id</th>
-          <th>Nombre</th>
-          <th>Precio</th>
-          <th>Stock</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for  item in products %}
+      <table class="table">
+        <thead class="table-light">
           <tr>
-            <td>{{item['id']}}</td>
-            <td>{{item['nombre']}}</td>
-            <td>S/. {{item['precio']}}</td>
-            <td>{{item['stock']}}</td>
-            <td>
-              <button class="btn btn-success"> Comprar unidad </button>
-            </td>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Stock</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-    
-
-    
-    
-
-              
+        </thead>
+        <tbody>
+          {% for  item in products %}
+            <tr>
+              <td>{{item.id}}</td>
+              <td>{{item.nombre}}</td>
+              <td>S/. {{item.precio}}</td>
+              <td>{{item.stock}}</td>
+              <td>
+                <form id="add" action="" method="post">
+                  <input type="hidden" name="product_id" value="{{item.id}}">
+                  <button class="btn btn-success" id="buy_product" type="submit"> Comprar unidad </button>
+                </form>
+                
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      
+      <div align="right">
+        <button class="btn btn-info" onclick="come_back()"> Regresar a vista de cliente </button>
+      </div>
     </div>
-          
 </body>
 </html>
+
+<script>
+  function come_back()
+  {
+    window.location="main_client_view.html";
+  }
+  /*function buy(item_id)
+  {
+    alert(item_id);
+  }*/
+</script>
 
 

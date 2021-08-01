@@ -6,7 +6,6 @@ from flask import Flask, render_template, request, send_from_directory , redirec
 # Global values :
 cluster = Cluster(contact_points=['127.0.0.1'], port=9042)
 
-
 def connect():	
 	conection = cluster.connect()
 	conection.row_factory = dict_factory
@@ -26,6 +25,7 @@ def run_cql(conection, fileName):
 
 app = Flask(__name__)
 app.secret_key = 'very-secret-key'
+
 
 @app.route('/')
 def index():
@@ -107,21 +107,42 @@ def client_view():
 		#error = "No ha seleccionado a un cliente"
 		return redirect("start_sale.html")
 	else:
-		return render_template("main_client_view.html", 
-			client_name = session['client_name'])
+		if 'bought_products' not in session:
+			return render_template("main_client_view.html", 
+				client_name = session['client_name'])
+		else:
+			return render_template("main_client_view.html", 
+				client_name = session['client_name'], bought_products = session['bought_products'])
 
 
 
-@app.route('/add_product.html')
+
+@app.route('/add_product.html', methods=['GET', 'POST'])
 def add_product():
 	if 'client_name' not in session:
 		return redirect("start_sale.html")
 	else:
-		conection = connect()
 		query = "SELECT * FROM BD.Producto ALLOW FILTERING; "
-		result = conection.execute(query)
 
-		return render_template('add_product.html', products = result)
+		if request.method == 'GET':
+			conection = connect()
+			result = conection.execute(query)
+			return render_template('add_product.html', products = result)
+		if request.method == 'POST':
+			query1 = """
+				SELECT stock FROM BD.producto
+				WHERE id=""" + str(request.form['product_id'])
+			conection = connect()
+			stock_ = conection.execute(query1)[0]['stock']
+
+			query2 = """
+				UPDATE BD.producto
+  				SET stock = """ + str(stock_ -1) + """
+				WHERE id=""" + str(request.form['product_id'])
+			conection.execute(query2)
+
+			result = conection.execute(query)
+			return render_template('add_product.html', products = result)
 
 
 
