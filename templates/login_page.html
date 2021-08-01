@@ -20,24 +20,28 @@
             <img src="{{ url_for('static',filename='Images/login_icon_2.png') }}" alt="Icono de inicio de sesión" width="150" height="150">
         </div>
         <br>
+        {% if error %}
+            <script>
+                alertify.error("{{ error }}").setHeader("Error");
+            </script>
+        {% endif %}
 
-        <form id="login_form">
+        <form id="login_form" action="" method="POST" onsubmit="return formEsValido()">
             <label for="user_name"> Nombre de Usuario: </label>
-            <input type="text" name="user_name" id="user_name" class="form-control">
+            <input type="text" placeholder="Username" name="user_name" id="user_name" value="{{request.form.user_name }}" class="form-control">
             <label for="password"> Contraseña </label>
-            <input type="password" name="password" id="password" class="form-control">
-
+            <input type="password" placeholder="Password" name="password" id="password" value="{{request.form.password }}" class="form-control">
             <br>
 
             <div align="right">
-                <button type="button" id="submit_button" class="btn btn-primary"> Iniciar Sesión </button>
+                <input type="submit" value="Iniciar Sesión"  class="btn btn-primary"> 
 
             </div>
         </form>
         <br> ¿No tienes una cuenta?
         <a href="register_page.html"> Regístrate </a>
         <br>
-        <a href="main_view.html"> Unirse como invitado </a>
+        <!-- <a href="main_view.html"> Unirse como invitado </a> -->
     </div>
     <br><br>
 
@@ -66,11 +70,13 @@
     }
 
 
+    /*
     $(document).ready(function() {
         $("#submit_button").click(function() {
             if (formEsValido()) {
-                // Aqui va la conexion a Cassandra<
+                alertify.alert("OK").setHeader("Atención");
+                
             }
         })
-    })
+    })*/
 </script>
