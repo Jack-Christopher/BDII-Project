@@ -1,4 +1,8 @@
 import os 
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Paragraph
+from reportlab.platypus.tables import Table
+from reportlab.lib.styles import getSampleStyleSheet
 from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
 from flask import Flask, render_template, request, send_from_directory , redirect, session
@@ -21,11 +25,43 @@ def run_cql(conection, fileName):
 			#print('Executing "' + stmt + '"')
 			conection.execute(stmt)
 
+def generatePDF(temp_dict):
+	doc = SimpleDocTemplate("Factura.pdf")
+	styles = getSampleStyleSheet()
+	#Escribimos una cadena de Texto dentro del documento
+	elements = []
+	conection = connect()
+
+	total = 0
+	data = []
+	data.append(["Id", "Nombre", "Precio", "Cantidad"])
+	for item in temp_dict.keys():
+		query = """
+			SELECT * FROM BD.Producto
+			WHERE id=""" + item
+		result = conection.execute(query)[0]
+		temp = [item, result['nombre'], "S/." + str(result['precio']), str(temp_dict.get(item))]
+		data.append(temp)
+		total += (result['precio'] * temp_dict.get(item) )
+
+	t=Table(data)
+	
+	text = "          FACTURA"
+	para = Paragraph(text, style=styles["Heading1"])
+	text2 = "                    Total: S/." + str(total)
+	para2 = Paragraph(text2, style=styles["Heading2"])
+	elements.append(para)
+	elements.append(t)
+	elements.append(para2)
+
+	#doc.drawString(100 , base + it, "Total: S/." + str(total))
+	#Guardamos el documento
+	doc.build(elements)
+	return total
 
 
 app = Flask(__name__)
 app.secret_key = 'very-secret-key'
-
 
 @app.route('/')
 def index():
@@ -65,14 +101,17 @@ def login():
 	return render_template('login_page.html', error=error)
 
 
-@app.route('/main_view.html')
+@app.route('/main_view.html', methods=['GET', 'POST'])
 def view():
-	if session['employee_name'] != "":
-		return render_template("main_view.html", employee_name = session['employee_name'])
-	else:
-		error = "No ha iniciado sesión"
+	if request.method == 'GET':
+		if session['employee_name'] != "":
+			return render_template("main_view.html", employee_name = session['employee_name'])
+		else:
+			error = "No ha iniciado sesión"
+			return redirect('login_page.html')
+	elif request.method == 'POST':
+		session.clear()
 		return redirect('login_page.html')
-
 
 
 @app.route('/start_sale.html', methods=['GET', 'POST'])
@@ -101,18 +140,31 @@ def login_client():
 	return render_template('start_sale.html', error=error)
 
 
-@app.route('/main_client_view.html')
+@app.route('/main_client_view.html', methods=['GET', 'POST'])
 def client_view():
 	if 'client_name' not in session:
-		#error = "No ha seleccionado a un cliente"
 		return redirect("start_sale.html")
 	else:
-		if 'bought_products' not in session:
+		if request.method == 'GET':
+			if 'product_list' not in session:
+				return render_template("main_client_view.html", 
+					client_name = session['client_name'],
+					total = "0.0")
+			else:
+				return render_template("main_client_view.html", 
+					client_name = session['client_name'], product_list = session['product_list'],
+					total = "0.0")
+		
+		elif request.method == 'POST':
+			temp_dict = session['product_list']
+			total = generatePDF(temp_dict)
+			session.pop('product_list', None)
 			return render_template("main_client_view.html", 
-				client_name = session['client_name'])
-		else:
-			return render_template("main_client_view.html", 
-				client_name = session['client_name'], bought_products = session['bought_products'])
+					client_name = session['client_name'],
+					total = total)
+
+
+
 
 
 
@@ -122,6 +174,9 @@ def add_product():
 	if 'client_name' not in session:
 		return redirect("start_sale.html")
 	else:
+		if 'product_list' not in session:
+			session['product_list'] = {}
+
 		query = "SELECT * FROM BD.Producto ALLOW FILTERING; "
 
 		if request.method == 'GET':
@@ -135,11 +190,16 @@ def add_product():
 			conection = connect()
 			stock_ = conection.execute(query1)[0]['stock']
 
-			query2 = """
-				UPDATE BD.producto
-  				SET stock = """ + str(stock_ -1) + """
-				WHERE id=""" + str(request.form['product_id'])
-			conection.execute(query2)
+			if stock_ > 0:
+				query2 = """
+					UPDATE BD.producto
+  					SET stock = """ + str(stock_ -1) + """
+					WHERE id=""" + str(request.form['product_id'])
+				conection.execute(query2)
+
+				temp_dict = session['product_list']
+				temp_dict[request.form['product_id']] = temp_dict.get(request.form['product_id'], 0) +1
+				session['product_list'] = temp_dict
 
 			result = conection.execute(query)
 			return render_template('add_product.html', products = result)

@@ -2,18 +2,18 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Tienda XYZ</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='styles/index.css') }}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
-    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
-    <link rel="shortcut icon" type="image/jpg" href="{{ url_for('static',filename='Images/icon.jpg') }}">
+  <meta charset="UTF-8">
+  <title>Tienda XYZ</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='styles/index.css') }}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+  <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+  <link rel="shortcut icon" type="image/jpg" href="{{ url_for('static',filename='Images/icon.jpg') }}">
 
 </head>
 
-<body >
+<body>
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
@@ -21,10 +21,10 @@
 
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
-            <a class="nav-link active" href="#">Inicio</a>
-            <a class="nav-link" href="#">ABCD</a>
-            <a class="nav-link" href="#">DEFG</a>
-            <a class="nav-link" href="#">HIJK</a>
+          <a class="nav-link active" href="#">Inicio</a>
+          <a class="nav-link" href="#">ABCD</a>
+          <a class="nav-link" href="#">DEFG</a>
+          <a class="nav-link" href="#">HIJK</a>
         </div>
       </div>
     </div>
@@ -36,22 +36,23 @@
   <div class="jumbotron" id="all_content" style="background:#cfe7ff">
 
     <h1 class="display-3" align="center"> Bienvenido(a) {{employee_name}} </h1>
-    
-    <br>
 
-    
+    <br><br><br>
+
+
     <div align="center">
-      <a href="start_sale.html" class="btn btn-success">Iniciar Venta</a>
-      <a href="#" class="btn btn-warning">Hacer Consulta {{user_name}}</a>
-      <a href="#" class="btn btn-info">Obtener Informe</a>
+      <a href="start_sale.html" class="btn btn-success" id="index-buttons">Iniciar Atención</a>
+      <a href="#" class="btn btn-warning" id="index-buttons">Hacer Consulta {{user_name}}</a>
+      <a href="#" class="btn btn-info" id="index-buttons">Obtener Informe</a>
     </div>
 
-    {{user_name}}
-    {{password}}
-    
-            
+    <br><br><br><br>
+    <form action="" method="post" align="center">
+      <button class="btn btn-danger"> Cerrar Sesión </button>
+    </form>
+
   </div>
-    
+
 </body>
 
 </html>

@@ -31,14 +31,17 @@
         <input type="text" placeholder="DNI del Cliente" name="client_DNI" id="client_DNI" value="{{request.form.client_DNI }}" class="form-control">
             <br> 
         <div align="right">
-            <button type="submit" id="submit_button" class="btn btn-primary" > Empezar Venta </button>
+            <button type="submit" id="submit_button" class="btn btn-primary" > Iniciar Atención </button>
         </div>
     </form>
     <br>  ¿No tienes una cuenta? 
-        <a href="register_client_page.html"> Regístrate </a>
-        <br>
-        <a href="main_client_view.html"> Unirse como invitado </a> <!-- para pruebas-->
+        <a href="register_client_page.html"> Registrar Cliente</a>
+        <br><br>
+        <div align="center">
+            <a  id="come_back" href="main_view.html" class="btn btn-danger" > Regresar </a>
+        </div>
     </div>
+    
 </body>
 </html>
 

@@ -9,10 +9,10 @@ IF NOT EXISTS;
 
 
 INSERT INTO BD.producto (id, nombre, precio, stock, descripcion) 
-   VALUES (21376843, 'Refrigeradora', 1000, 12, 'Es una buena refrigeradora') 
+   VALUES (2143, 'Refrigeradora', 1000, 12, 'Es una buena refrigeradora') 
 IF NOT EXISTS; 
 INSERT INTO BD.producto (id, nombre, precio, stock, descripcion) 
-   VALUES (46237, 'Horno microondas', 450, 22, 'Es un buen horno M.') 
+   VALUES (4637, 'Horno microondas', 450, 22, 'Es un buen horno M.') 
 IF NOT EXISTS; 
 INSERT INTO BD.producto (id, nombre, precio, stock, descripcion) 
    VALUES (1212, 'Licuadora', 250, 10, 'Licuadora de buena calidad') 
