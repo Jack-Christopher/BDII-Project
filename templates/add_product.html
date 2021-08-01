@@ -34,7 +34,40 @@
     </nav>
 
 
-    Listado de elementos: <br><br>
+    <div class="container">
+      <h1 class="display-3"> Listado de productos: </h1>
+    </div>
+    <br><br>
+
+    <div class="container">
+    <table class="table">
+      <thead class="table-light">
+        <tr>
+          <th>Id</th>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th>Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for  item in products %}
+          <tr>
+            <td>{{item['id']}}</td>
+            <td>{{item['nombre']}}</td>
+            <td>S/. {{item['precio']}}</td>
+            <td>{{item['stock']}}</td>
+            <td>
+              <button class="btn btn-success"> Comprar unidad </button>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+    
+
+    
     
 
               
