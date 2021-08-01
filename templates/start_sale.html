@@ -20,15 +20,18 @@
         </div> 
         <br>
 
-    <form id="sale_form" >
-        <label for="client_DNI"> DNI del Cliente: </label>
-        <input type="text" name="client_name" id="client_name" class="form-control">
+    {% if error %} 
+        <script>
+            alertify.error("{{ error }}").setHeader("Error");
+        </script>
+    {% endif %}
 
+    <form id="sale_form" action="" method="POST" onsubmit="return formEsValido()">
+        <label for="client_DNI"> DNI del Cliente: </label>
+        <input type="text" placeholder="DNI del Cliente" name="client_DNI" id="client_DNI" value="{{request.form.client_DNI }}" class="form-control">
             <br> 
-        
         <div align="right">
-            <button type="button" id="submit_button" class="btn btn-primary" > Empezar Venta </button>
-            
+            <button type="submit" id="submit_button" class="btn btn-primary" > Empezar Venta </button>
         </div>
     </form>
     <br>  ¿No tienes una cuenta? 
@@ -60,7 +63,7 @@
         return true;
     }
 
-    $(document).ready( function() 
+    /*$(document).ready( function() 
     { 
         $("#submit_button").click( function() 
         {
@@ -71,4 +74,5 @@
             
         })
     })
+    */
 </script>

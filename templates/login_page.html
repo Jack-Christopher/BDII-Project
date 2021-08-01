@@ -20,7 +20,7 @@
             <img src="{{ url_for('static',filename='Images/login_icon_2.png') }}" alt="Icono de inicio de sesión" width="150" height="150">
         </div>
         <br>
-        {% if error %}
+        {% if error %} 
             <script>
                 alertify.error("{{ error }}").setHeader("Error");
             </script>
