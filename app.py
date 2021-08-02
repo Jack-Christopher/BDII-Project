@@ -101,6 +101,33 @@ def login():
 	return render_template('login_page.html', error=error)
 
 
+@app.route('/register_page.html', methods=['GET', 'POST'])
+def register():
+	error = None
+	print("b")
+	if request.method == 'POST':
+		print("d")
+		conection = connect()
+		name = request.form.get("name")
+		last_name = request.form.get("last_name")
+		username = request.form.get("user")
+		DNI = request.form.get("client_DNI")
+		password = request.form.get("password")
+
+		values = DNI+","+"'"+name+"'"+","+"'"+last_name+"'"+","+"'"+username+"'"+","+"'"+password+"'"
+
+		print(values)
+		#Conexión
+		query = """
+			INSERT INTO BD.empleado (DNI, nombre, apellidos, username,password)
+			VALUES ("""+ values + """);"""
+		result = conection.execute(query)
+
+		return redirect('/')
+
+	return render_template('register_page.html')
+
+
 @app.route('/main_view.html', methods=['GET', 'POST'])
 def view():
 	if request.method == 'GET':
