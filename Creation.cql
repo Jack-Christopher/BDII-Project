@@ -4,6 +4,7 @@ USE bd;
 
 CREATE TABLE IF NOT EXISTS producto (
 	id int PRIMARY KEY, 
+	id_sucursal int,
 	nombre text, 
 	precio float, 
 	stock int, 
@@ -13,6 +14,7 @@ CREATE TABLE IF NOT EXISTS producto (
 CREATE TABLE IF NOT EXISTS reserva (
 	id int PRIMARY KEY,
 	id_producto int,
+	id_sucursal int,
 	cantidad float, 
 	adelanto float, 
 	tipo_venta text
@@ -23,19 +25,20 @@ CREATE TABLE IF NOT EXISTS cliente (
 	nombre text, 
 	apellidos text, 
 	tarjeta_credito int,
-	RUC int
+	id_sucursal int
 );
 
 CREATE TABLE IF NOT EXISTS factura (
 	id int PRIMARY KEY,
 	fecha date, 
 	id_producto map<int,int>,
-	costo float, 
-	medio_de_pago text
+	id_sucursal int,
+	costo float
 );
 
 CREATE TABLE IF NOT EXISTS cajero (
 	id int PRIMARY KEY, 
+	id_sucursal int,
 	tipo text
 );
 
@@ -45,6 +48,7 @@ CREATE TABLE IF NOT EXISTS corte_turno (
 	hora_salida text, 
 	saldo_inicial float, 
 	entrada text, 
+	id_sucursal int,
 	devoluciones float, 
 	saldo_final float
 );
@@ -55,15 +59,18 @@ CREATE TABLE IF NOT EXISTS empleado (
 	apellidos text,
 	username text,
 	password text,
-	permisos text
+	id_sucursal int
 );
 
 CREATE TABLE IF NOT EXISTS vale (
 	id int PRIMARY KEY, 
+	id_sucursal int,
 	porcentaje float
 );
 
 CREATE TABLE IF NOT EXISTS gasto (
 	id int PRIMARY KEY, 
-	cantidad int
+	id_sucursal int,
+	cantidad int,
+	concepto text
 );
