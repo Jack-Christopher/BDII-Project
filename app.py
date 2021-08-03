@@ -1,8 +1,8 @@
 import os 
-from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.platypus.tables import Table
 from reportlab.lib.styles import getSampleStyleSheet
+from datetime import datetime
 from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
 from flask import Flask, render_template, request, send_from_directory , redirect, session
@@ -60,6 +60,33 @@ def generatePDF(temp_dict):
 	return total
 
 
+def insertFactura(temp_dict):
+	conection = connect()
+	today = datetime.today().strftime('%Y-%m-%d')
+	total = 0
+	for item in temp_dict.keys():
+		query = """
+			SELECT precio FROM BD.Producto
+			WHERE id=""" + item
+		result = conection.execute(query)[0]
+
+		total += (result['precio'] * temp_dict.get(item) )
+
+	#get the correct id of the "Factura"
+	query2 = "SELECT MAX(id) as maximo from BD.factura;"
+	max_id = str(conection.execute(query2)[0]['maximo'] +1)
+
+	products = s = "".join(str(temp_dict).split("'"))
+	print(products)
+
+	query3 = """
+		INSERT INTO BD.factura (id, fecha, costo, id_producto) 
+		VALUES (""" + max_id + """, '""" + today + """', """ + str(total) + """, """ + products + """)"""
+	conection.execute(query3)
+
+
+
+
 app = Flask(__name__)
 app.secret_key = 'very-secret-key'
 
@@ -68,7 +95,7 @@ def index():
 	conection = connect()
 	run_cql(conection, "Creation.cql")
 	run_cql(conection, "Insertions.cql")
-	print("ok")
+	#print("Inicio de web exitoso")
 	return render_template("index.html")
 
 
@@ -101,12 +128,11 @@ def login():
 	return render_template('login_page.html', error=error)
 
 
+
 @app.route('/register_page.html', methods=['GET', 'POST'])
 def register():
 	error = None
-	print("b")
 	if request.method == 'POST':
-		print("d")
 		conection = connect()
 		name = request.form.get("name")
 		last_name = request.form.get("last_name")
@@ -119,7 +145,7 @@ def register():
 		print(values)
 		#Conexión
 		query = """
-			INSERT INTO BD.empleado (DNI, nombre, apellidos, username,password)
+			INSERT INTO BD.empleado (DNI, nombre, apellidos, username, password)
 			VALUES ("""+ values + """);"""
 		result = conection.execute(query)
 
@@ -128,14 +154,20 @@ def register():
 	return render_template('register_page.html')
 
 
+
 @app.route('/main_view.html', methods=['GET', 'POST'])
 def view():
 	if request.method == 'GET':
-		if session['employee_name'] != "":
-			return render_template("main_view.html", employee_name = session['employee_name'])
+		if 'employee_name' in session:
+			if session['employee_name'] != "":
+				return render_template("main_view.html", employee_name = session['employee_name'])
+			else:
+				error = "No ha iniciado sesión"
+				return redirect('login_page.html')
 		else:
 			error = "No ha iniciado sesión"
 			return redirect('login_page.html')
+
 	elif request.method == 'POST':
 		session.clear()
 		return redirect('login_page.html')
@@ -170,7 +202,7 @@ def login_client():
 @app.route('/main_client_view.html', methods=['GET', 'POST'])
 def client_view():
 	if 'client_name' not in session:
-		return redirect("start_sale.html")
+		return redirect("main_view.html")
 	else:
 		if request.method == 'GET':
 			if 'product_list' not in session:
@@ -183,12 +215,18 @@ def client_view():
 					total = "0.0")
 		
 		elif request.method == 'POST':
-			temp_dict = session['product_list']
-			total = generatePDF(temp_dict)
-			session.pop('product_list', None)
+			if 'product_list' in session:
+				temp_dict = session['product_list']
+				total = generatePDF(temp_dict)
+				insertFactura(temp_dict)
+				session.pop('product_list', None)
+				return render_template("main_client_view.html", 
+						client_name = session['client_name'],
+						total = total)
 			return render_template("main_client_view.html", 
-					client_name = session['client_name'],
-					total = total)
+						client_name = session['client_name'],
+						total = "0.0")
+
 
 
 

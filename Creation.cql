@@ -27,8 +27,9 @@ CREATE TABLE IF NOT EXISTS cliente (
 );
 
 CREATE TABLE IF NOT EXISTS factura (
-	id int PRIMARY KEY, 
-	id_producto int,
+	id int PRIMARY KEY,
+	fecha date, 
+	id_producto map<int,int>,
 	costo float, 
 	medio_de_pago text
 );
