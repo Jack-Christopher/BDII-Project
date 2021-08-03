@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Tienda XYZ</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='styles/index.css') }}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+  <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+  <link rel="shortcut icon" type="image/jpg" href="{{ url_for('static',filename='Images/icon.jpg') }}">
+
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <div class="container-fluid">
+
+      <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+          <a class="nav-link active" href="#">Inicio</a>
+          <a class="nav-link" href="#">ABCD</a>
+          <a class="nav-link" href="#">DEFG</a>
+          <a class="nav-link" href="#">HIJK</a>
+        </div>
+      </div>
+    </div>
+
+  </nav>
+
+
+
+  <div class="jumbotron" id="all_content" style="background:#cfe7ff">
+
+    <h1 class="display-3" align="center"> Consulte sobre un producto </h1>
+
+    <br><br>
+
+
+    <div class="container" align="center">
+        <form action="" method="post">
+            <input id="for_search" name="for_search" type="text" size="20">
+            <button class="btn btn-primary"id="index-buttons" type="submit">Hacer Búsqueda</button>
+            <br><br>
+            <input type="radio" id="by_id2" name="search" value="by_id" >
+            <label for="by_id"> Buscar por ID </label>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            <input type="radio" id="by_name" name="search" value="by_name">
+            <label for="by_id"> Buscar por Nombre </label>
+        </form>
+    </div>
+    
+
+    <br><br>
+    <div align="right">
+        <a href="main_view.html" class="btn btn-danger"> Regresar </a>        
+    </div>
+    
+  </div>
+
+
+    {% if data %}
+    <div class="container" align="center">
+        <div class="jumbotron" id="all_content" style="background:#cfe7ffd7">
+            <table class="table table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">Id </th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Descripcion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">{{data['id']}}</th>
+                    <td>{{data['nombre']}}</td>
+                    <td>{{data['precio']}}</td>
+                    <td>{{data['descripcion']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+    </div>
+    {% endif%}
+</div>
+</body>
+</html>

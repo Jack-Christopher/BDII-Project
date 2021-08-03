@@ -272,6 +272,57 @@ def add_product():
 
 
 
+@app.route('/ask_for_product.html', methods=['GET', 'POST'])
+def query_product():
+	conection = connect()
+	#query
+	if request.method == "POST":
+		search_by = request.form['search']
+		if search_by == "by_id":
+			query = """ 
+				SELECT * FROM BD.Producto 
+				WHERE ID=""" + request.form['for_search'] + " ALLOW FILTERING"
+		elif search_by == "by_name":
+			query = """
+				SELECT * FROM BD.Producto
+				WHERE nombre='""" + request.form['for_search'] +"' ALLOW FILTERING"
+
+		print(query)
+		result = conection.execute(query)[0]
+		print(result)
+
+		return render_template('ask_for_product.html',
+				data = result)
+
+	else:
+		return render_template('ask_for_product.html')
+
+
+
+
+@app.route('/insert_product.html', methods=['GET', 'POST'])
+def insert_product():
+	if request.method == 'POST':
+		conection = connect()
+		id_ = request.form.get("product_id")
+		nombre = request.form.get("product_name")
+		precio = request.form.get("product_price")
+		descripcion = request.form.get("description")
+		stock = request.form.get("stock")
+
+		values = id_+","+"'"+nombre+"'"+","+"'"+descripcion+"'"+","+precio+","+stock
+
+		#Conexión
+		query = """
+			INSERT INTO BD.Producto (id, nombre, descripcion, precio, stock)
+			VALUES ("""+ values + """);"""
+		print(query)
+		result = conection.execute(query)
+
+
+	return render_template('insert_product.html')
+
+
 @app.route('/<page>')
 def web_dir(page):
 	return render_template("/" + page)
