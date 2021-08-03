@@ -319,8 +319,22 @@ def insert_product():
 		print(query)
 		result = conection.execute(query)
 
-
 	return render_template('insert_product.html')
+
+
+@app.route('/delete_product.html', methods=['GET', 'POST'])
+def delete_product():
+	if request.method == 'POST':
+		query1 = """
+			DELETE FROM BD.producto
+			WHERE id=""" + str(request.form['product_id'])
+		conection = connect()
+		conection.execute(query1)
+
+	query = "SELECT * FROM BD.Producto ALLOW FILTERING; "
+	conection = connect()
+	result = conection.execute(query)
+	return render_template('delete_product.html', products = result)
 
 
 @app.route('/<page>')
