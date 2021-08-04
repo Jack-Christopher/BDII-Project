@@ -54,36 +54,19 @@
               <td>{{item.id}}</td>
               <td>{{item.nombre}}</td>
               <td>S/. {{item.precio}}</td>
-              <td>{{item.stock}}</td>
-              <td>
-                <form id="add" action="" method="post">
-                  <input type="hidden" name="product_id" value="{{item.id}}">
-                  <button class="btn btn-success" id="buy_product" type="submit"> Vender unidad </button>
-                </form>
-                
-              </td>
+              {% if item.stock < 1 %}
+                <td><button disabled="disabled" class="btn btn-danger">Agotado</button> </td>
+              {% else %}
+                <td>{{item.stock}}</td>
+            {% endif %}
             </tr>
           {% endfor %}
         </tbody>
       </table>
       
       <div align="right">
-        <button class="btn btn-info" onclick="come_back()"> Regresar a vista de cliente </button>
+        <a href="get_report.html" class="btn btn-info"> Regresar a Informe General </a>
       </div>
     </div>
-    <br><br>
 </body>
 </html>
-
-<script>
-  function come_back()
-  {
-    window.location="main_client_view.html";
-  }
-  /*function buy(item_id)
-  {
-    alert(item_id);
-  }*/
-</script>
-
-

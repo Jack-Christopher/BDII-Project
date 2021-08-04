@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Tienda XYZ</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='styles/index.css') }}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+  <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+  <link rel="shortcut icon" type="image/jpg" href="{{ url_for('static',filename='Images/icon.jpg') }}">
+
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <div class="container-fluid">
+
+      <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+          <a class="nav-link active" href="#">Inicio</a>
+          <a class="nav-link" href="#">ABCD</a>
+          <a class="nav-link" href="#">DEFG</a>
+          <a class="nav-link" href="#">HIJK</a>
+        </div>
+      </div>
+    </div>
+
+  </nav>
+
+
+
+  <div class="jumbotron" id="all_content" style="background:#cfe7ff">
+
+    <h1 class="display-3" align="center"> Informe General </h1>
+
+    <br><br>
+
+
+    <div align="center">
+
+      <div class="container" align="center">
+        <div class="jumbotron" id="all_content" style="background:#cfe7ffd7">
+            <table class="table table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col"> </th>
+                    {% for s in sucursales %}
+                      <td scope="col"> {{s[0]}}</td>
+                    {% endfor %}                    
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row"># Facturas por dia</th>
+                    {% for s in sucursales %}
+                      <td> {{s[1]}} </td>
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <th scope="row">Cortes de Turno</th>
+                    {% for s in sucursales %}
+                      <td>
+                        {% for item in s[2] %}
+                        ID: {{item['id']}}, <br>
+                        Hora de entrada: {{item['hora_entrada']}}, <br>
+                        Hora de salida: {{item['hora_salida']}}
+                        <br><br>
+                        {% endfor %}    
+                      </td> 
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <th scope="row">Clientes Registrados</th>
+                    {% for s in sucursales %}
+                      <td>
+                        {% for item in s[3] %}
+                          DNI: {{item['dni']}},<br>
+                          Nombres: {{item['nombre']}}, <br>
+                          Apellidos: {{item['apellidos']}}
+                          <br><br>
+                        {% endfor %}    
+                      </td> 
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <th scope="row">Vales de Empleados</th>
+                    {% for s in sucursales %}
+                      <td>
+                        {% for item in s[4] %}
+                          ID: {{item['id']}}, &nbsp;&nbsp;
+                          Porcentaje: {{item['porcentaje']}}% <br>
+                          Dni del Empleado: {{item['dni_empleado']}}
+                          <br><br>
+                        {% endfor %}    
+                      </td> 
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <th scope="row">Gastos de sucursal</th>
+                    {% for s in sucursales %}
+                      <td>
+                        {% for item in s[5] %}
+                        ID: {{item['id']}}, &nbsp;&nbsp;
+                        Cantidad: S/.{{item['cantidad']}}, <br>
+                        Concepto: {{item['concepto']}}
+                        <br><br>
+                        {% endfor %}    
+                      </td> 
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <th scope="row">Reserva de Equipos</th>
+                    {% for s in sucursales %}
+                      <td>
+                        {% for item in s[6] %}
+                        ID: {{item['id']}}, &nbsp;&nbsp;
+                        ID del Producto: {{item['id_producto']}}, <br>
+                        Cantidad: {{item['cantidad']}} Unidad(es), <br>
+                        Adelanto: S/.{{item['adelanto']}}
+                        <br><br>
+                        {% endfor %}    
+                      </td> 
+                    {% endfor %}
+                  </tr>
+                  
+                </tbody>
+              </table>
+        </div>
+    </div>
+
+    <br>
+      <a href="view_products.html" class="btn btn-warning">Ver disponibilidad de productos</a>
+    <br>
+  </div>
+
+   <br><br><br>
+    <div align="right">
+        <a href="main_view.html" class="btn btn-danger"> Regresar </a>
+    </div>
+   <br>
+
+  </div>
+
+</body>
+
+</html>

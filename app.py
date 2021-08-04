@@ -77,11 +77,11 @@ def insertFactura(temp_dict):
 	max_id = str(conection.execute(query2)[0]['maximo'] +1)
 
 	products = s = "".join(str(temp_dict).split("'"))
-	print(products)
-
 	query3 = """
-		INSERT INTO BD.factura (id, fecha, costo, id_producto) 
-		VALUES (""" + max_id + """, '""" + today + """', """ + str(total) + """, """ + products + """)"""
+		INSERT INTO BD.factura (id, fecha, costo, id_producto, id_sucursal) 
+		VALUES (""" + max_id + """, '""" + today + """', """ + str(total) + """, """ + products + """
+		, """ + str(session['sucursal_id']) + """)"""
+	
 	conection.execute(query3)
 
 
@@ -115,11 +115,14 @@ def login():
 			error = 'Datos incorrectos, inténtelo de nuevo'
 		else:
 			query2 = """ 
-				SELECT nombre FROM BD.Empleado
+				SELECT nombre, id_sucursal, dni FROM BD.Empleado
 				WHERE username = '""" + request.form['user_name'] + """'ALLOW FILTERING; """
 			result2 = conection.execute(query2)[0]
 
 			session['employee_name'] = result2['nombre']
+			session['dni_empleado'] = result2['dni']
+			session['sucursal_id'] = result2['id_sucursal']
+			session['hora_inicio'] = str(datetime.now().time())[:5]
 			return redirect('main_view.html')
 
 	elif request.method == 'GET':
@@ -142,7 +145,6 @@ def register():
 
 		values = DNI+","+"'"+name+"'"+","+"'"+last_name+"'"+","+"'"+username+"'"+","+"'"+password+"'"
 
-		print(values)
 		#Conexión
 		query = """
 			INSERT INTO BD.empleado (DNI, nombre, apellidos, username, password)
@@ -154,26 +156,21 @@ def register():
 	return render_template('register_page.html')
 
 
+
+
 @app.route('/register_client_page.html', methods = ['GET', 'POST'])
 def registerClient():
-	
-	print("Registrar cliente")
-
 	if request.method == 'POST':
 		
 		conection = connect()
 		name = request.form.get("name")
 		last_name = request.form.get("last_name")
 		DNI = request.form.get("client_DNI")
-		RUC = request.form.get("client_RUC")
 		credit_target = request.form.get("credit")
-
-		values = DNI+","+"'"+last_name+"'"+","+"'"+name+"'"+","+RUC+","+credit_target
-
-		print("POST: Register Client: ", values)
+		values = DNI+","+"'"+last_name+"'"+","+"'"+name+"'"+","+credit_target+","+str(session['sucursal_id'])
 
 		query = """
-			INSERT INTO BD.cliente (dni, apellidos, nombre, ruc,tarjeta_credito)
+			INSERT INTO BD.cliente (dni, apellidos, nombre, tarjeta_credito, id_sucursal)
 			VALUES ("""+ values + """);"""
 
 		conection.execute(query)
@@ -198,6 +195,18 @@ def view():
 			return redirect('login_page.html')
 
 	elif request.method == 'POST':
+		conection = connect()
+		hora_fin = str(datetime.now().time())[:5]
+		query = "SELECT MAX(id) as maximo FROM BD.Corte_turno"
+		ID = str(conection.execute(query)[0]['maximo']+1)
+
+		query1 = """
+			INSERT INTO BD.Corte_turno (id, dni_empleado, id_sucursal, hora_entrada, hora_salida)
+			VALUES (""" + ID + """, """ + str(session['dni_empleado']) + """, """ + str(session['sucursal_id'])+ """
+			, '""" + session['hora_inicio'] + """', '""" + hora_fin + """')"""
+		print(query1)
+		conection.execute(query1)
+
 		session.clear()
 		return redirect('login_page.html')
 
@@ -316,9 +325,7 @@ def query_product():
 				SELECT * FROM BD.Producto
 				WHERE nombre='""" + request.form['for_search'] +"' ALLOW FILTERING"
 
-		print(query)
 		result = conection.execute(query)[0]
-		print(result)
 
 		return render_template('ask_for_product.html',
 				data = result)
@@ -345,7 +352,6 @@ def insert_product():
 		query = """
 			INSERT INTO BD.Producto (id, nombre, descripcion, precio, stock)
 			VALUES ("""+ values + """);"""
-		print(query)
 		result = conection.execute(query)
 
 	return render_template('insert_product.html')
@@ -366,6 +372,106 @@ def delete_product():
 	return render_template('delete_product.html', products = result)
 
 
+@app.route('/get_report.html')
+def get_report():
+	sucursales = []
+	conection = connect()
+	query = "SELECT id, nombre FROM BD.Sucursal"
+	result = conection.execute(query)
+	for sucursal in result:
+		temp = []
+		temp.append(sucursal['nombre'])
+
+		query1 = """SELECT COUNT(id) as cantidad 
+			FROM BD.Factura 
+			WHERE id_sucursal=""" + str(sucursal['id']) + """ ALLOW FILTERING"""
+		n_facturas = str(conection.execute(query1)[0]['cantidad'])
+		temp.append(n_facturas)
+
+		query2 = """
+			SELECT * FROM BD.corte_turno 
+			WHERE id_sucursal=""" + str(sucursal['id']) + """ ALLOW FILTERING"""
+		cortes_t = conection.execute(query2)
+		temp.append(cortes_t)
+
+		query3 = """
+			SELECT * FROM BD.Cliente 
+			WHERE id_sucursal=""" + str(sucursal['id']) + """ ALLOW FILTERING"""
+		clientes = conection.execute(query3)
+		temp.append(clientes)
+
+		query4 = """
+			SELECT * FROM BD.Vale 
+			WHERE id_sucursal=""" + str(sucursal['id']) + """ ALLOW FILTERING"""
+		vales = conection.execute(query4)
+		temp.append(vales)
+
+		query5 = """
+			SELECT * FROM BD.Gasto 
+			WHERE id_sucursal=""" + str(sucursal['id']) + """ ALLOW FILTERING"""
+		gastos = conection.execute(query5)
+		temp.append(gastos)
+
+		query6 = """
+			SELECT * FROM BD.Reserva 
+			WHERE id_sucursal=""" + str(sucursal['id']) + """ ALLOW FILTERING"""
+		reservas = conection.execute(query6)
+		temp.append(reservas)
+
+		sucursales.append(temp)
+
+
+
+	return render_template('get_report.html', sucursales = sucursales)
+
+
+@app.route('/view_products.html')
+def view_products():
+	query = "SELECT * FROM BD.Producto ALLOW FILTERING; "
+	conection = connect()
+	result = conection.execute(query)
+	return render_template('view_products.html', products = result)
+
+
+
+@app.route('/insert_spending.html', methods = ['GET', 'POST'])
+def inser_spending():
+	if request.method == "POST":
+		conection = connect()
+		query = "SELECT MAX(id) as maximo FROM BD.Gasto"
+		ID = str(conection.execute(query)[0]['maximo']+1)
+		query1= """
+		INSERT INTO BD.Gasto (id, cantidad, concepto, id_sucursal)
+		VALUES("""+ ID + """, """+request.form['cantidad']+ """, '""" + request.form['concepto'] +"""'
+		, """ + str(session['sucursal_id']) + """)"""
+		conection.execute(query1)
+
+	return render_template('insert_spending.html')
+
+
+
+
+@app.route('/insert_vale.html', methods=['GET', 'POST'])
+def insert_vale():
+	if request.method == 'POST':
+		conection = connect()
+		dni_empleado = request.form.get("dni_empleado")
+		porcentaje = request.form.get("porcentaje")
+
+		query = "SELECT MAX(id) as maximo from BD.vale;"
+		ID = str(conection.execute(query)[0]['maximo'] +1)
+		
+		#Conexión
+		query1 = """
+			INSERT INTO BD.Vale (id, id_sucursal, dni_empleado, porcentaje)
+			VALUES ("""+ ID +""", """ + str(session['sucursal_id']) + """, """ + str(dni_empleado) + """
+			, """ + str(porcentaje) +""")"""
+		conection.execute(query1)
+
+	return render_template('insert_vale.html')
+
+
+
 @app.route('/<page>')
 def web_dir(page):
 	return render_template("/" + page)
@@ -373,8 +479,6 @@ def web_dir(page):
 @app.route('/favicon.ico') 
 def favicon(): 
     return send_from_directory(os.path.join(app.root_path, 'static'), '/Images/icon.jpg')
-
-
 
 
 if __name__ == '__main__':

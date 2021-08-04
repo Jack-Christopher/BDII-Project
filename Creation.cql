@@ -11,20 +11,23 @@ CREATE TABLE IF NOT EXISTS producto (
 	descripcion text
 );
 
+CREATE TABLE IF NOT EXISTS sucursal (
+	id int PRIMARY KEY, 
+	nombre text
+);
+
 CREATE TABLE IF NOT EXISTS reserva (
 	id int PRIMARY KEY,
 	id_producto int,
 	id_sucursal int,
 	cantidad float, 
-	adelanto float, 
-	tipo_venta text
+	adelanto float
 );
 
 CREATE TABLE IF NOT EXISTS cliente (
 	DNI int PRIMARY KEY, 
 	nombre text, 
 	apellidos text, 
-	ruc int,
 	tarjeta_credito int,
 	id_sucursal int
 );
@@ -44,13 +47,12 @@ CREATE TABLE IF NOT EXISTS cajero (
 );
 
 CREATE TABLE IF NOT EXISTS corte_turno (
-	id int PRIMARY KEY, 
-	hora_entrada text, 
-	hora_salida text, 
-	saldo_inicial float, 
-	entrada text, 
+	id int PRIMARY KEY,
+	dni_empleado int, 
+	hora_entrada text,
+	hora_salida text,
+	saldo_inicial float,
 	id_sucursal int,
-	devoluciones float, 
 	saldo_final float
 );
 
@@ -66,6 +68,7 @@ CREATE TABLE IF NOT EXISTS empleado (
 CREATE TABLE IF NOT EXISTS vale (
 	id int PRIMARY KEY, 
 	id_sucursal int,
+	dni_empleado int,
 	porcentaje float
 );
 

@@ -35,29 +35,31 @@
 
   <div class="jumbotron" id="all_content" style="background:#cfe7ff">
 
-    <h1 class="display-3" align="center"> Bienvenido(a) {{employee_name}} </h1>
+    <h1 class="display-3" align="center"> Inserte un Vale de Descuento</h1>
 
     <br><br>
 
 
-    <div align="center">
-      
-      <a href="ask_for_product.html" class="btn btn-warning" id="index-buttons">Hacer Consulta</a>
-      <a href="insert_product.html" class="btn btn-success" id="index-buttons">Insertar Registro</a>
-      <a href="#" class="btn btn-info" id="index-buttons">Actualizar Registro</a>
-      <a href="delete_product.html" class="btn btn-dark" id="index-buttons">Eliminar Registro</a>
-      <br><br><br>
-      <a href="start_sale.html" class="btn btn-primary" id="index-buttons">Iniciar Atención</a>
-      <a href="get_report.html" class="btn btn-light" id="index-buttons">Obtener Informe</a>
+    <div class="container" align="center">
+        <form action="" method="post">
+            <label for="porcentaje"> Porcentaje de Descuento: </label>
+            <input id="porcentaje" name="porcentaje" type="text" size="10">&nbsp;%
+            <br><br>
+            <label for="dni_empleado"> DNI del Empleado: </label>
+            <input id="dni_empleado" name="dni_empleado" type="text" size="10">
+            <br><br>
+            <button class="btn btn-primary"id="index-buttons" type="submit">Insertar</button>
+        </form>
     </div>
+    
 
-    <br><br><br>
-    <form action="" method="post" align="center">
-      <button class="btn btn-danger"> Cerrar Sesión </button>
-    </form>
-
+    <br><br>
+    <div align="right">
+        <a href="insert_product.html" class="btn btn-danger"> Regresar </a>        
+    </div>
+    
   </div>
 
+</div>
 </body>
-
 </html>
