@@ -22,13 +22,15 @@
         <input type="text" name="last_name" id="last_name" class="form-control">
         <label for="client_DNI"> DNI del cliente: </label>
         <input type="text" name="client_DNI" id="client_DNI" class="form-control">
+        <label for="client_RUC"> RUC: </label>
+        <input type="text" name="client_RUC" id="client_RUC" class="form-control">
         <label for="credit"> Tarjeta de crédito: </label>
         <input type="text" name="credit" id="credit" class="form-control">
 
             <br> 
         
         <div align="right">
-            <button type="submit" id="submit_button" class="btn btn-primary" > Registrar Cliente </button>
+            <button type="submit" id="submit_button" class="btn btn-primary" > Registrarse </button>
         </div>
     
     </form>
@@ -48,6 +50,7 @@
         var nombres = $("#name");
         var apellidos = $("#last_name");
         var DNI = $("#client_DNI");
+        var RUC = $("#client_RUC");
         var TarjetaCredito = $("#credit");
 
         if( nombres.val() == "")
@@ -65,6 +68,11 @@
             var op = alertify.alert("Debe colocar su DNI." ).setHeader("Atención");
             return false;
         }
+        else if( RUC.val() == "")
+        {
+            var op = alertify.alert("Debe colocar su RUC." ).setHeader("Atención");
+            return false;
+        }
         else if( TarjetaCredito.val() == "")
         {
             var op = alertify.alert("Debe colocar su tarjeta de crédito del cliente.").setHeader("Atención");
@@ -74,4 +82,16 @@
         return true;
     }
 
+    /*
+    $(document).ready( function() 
+    { 
+        $("#submit_button").click( function() 
+        {
+            if(formEsValido())
+            {
+                // Aqui va la conexion a Cassandra 
+            }
+            
+        })
+    })*/
 </script>
