@@ -157,20 +157,26 @@ def register():
 
 
 
-
 @app.route('/register_client_page.html', methods = ['GET', 'POST'])
 def registerClient():
+
+	print("Registrar cliente")
+
 	if request.method == 'POST':
-		
+
 		conection = connect()
 		name = request.form.get("name")
 		last_name = request.form.get("last_name")
 		DNI = request.form.get("client_DNI")
+		RUC = request.form.get("client_RUC")
 		credit_target = request.form.get("credit")
-		values = DNI+","+"'"+last_name+"'"+","+"'"+name+"'"+","+credit_target+","+str(session['sucursal_id'])
+
+		values = DNI+","+"'"+last_name+"'"+","+"'"+name+"'"+","+RUC+","+credit_target
+
+		print("POST: Register Client: ", values)
 
 		query = """
-			INSERT INTO BD.cliente (dni, apellidos, nombre, tarjeta_credito, id_sucursal)
+			INSERT INTO BD.cliente (dni, apellidos, nombre, ruc,tarjeta_credito)
 			VALUES ("""+ values + """);"""
 
 		conection.execute(query)
