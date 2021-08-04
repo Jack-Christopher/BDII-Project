@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS cliente (
 	nombre text, 
 	apellidos text, 
 	tarjeta_credito int,
-	ruc int,
 	id_sucursal int
 );
 
