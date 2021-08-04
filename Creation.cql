@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS cliente (
 	DNI int PRIMARY KEY, 
 	nombre text, 
 	apellidos text, 
+	ruc int,
 	tarjeta_credito int,
 	id_sucursal int
 );
