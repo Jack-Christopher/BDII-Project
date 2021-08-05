@@ -142,16 +142,16 @@ def register():
 		username = request.form.get("user")
 		DNI = request.form.get("client_DNI")
 		password = request.form.get("password")
+		s_id = str(session['sucursal_id'])
 
-		values = DNI+","+"'"+name+"'"+","+"'"+last_name+"'"+","+"'"+username+"'"+","+"'"+password+"'"
+		values = DNI+","+"'"+name+"'"+","+"'"+last_name+"'"+","+"'"+username+"'"+","+"'"+password+"',"+ s_id
 
 		#Conexión
 		query = """
-			INSERT INTO BD.empleado (DNI, nombre, apellidos, username, password)
+			INSERT INTO BD.empleado (DNI, nombre, apellidos, username, password, id_sucursal)
 			VALUES ("""+ values + """);"""
 		result = conection.execute(query)
 
-		return redirect('/')
 
 	return render_template('register_page.html')
 
@@ -178,6 +178,7 @@ def registerClient():
 		return redirect('/start_sale.html')
 
 	return render_template('register_client_page.html')
+
 
 
 @app.route('/main_view.html', methods=['GET', 'POST'])
