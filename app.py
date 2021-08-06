@@ -157,6 +157,23 @@ def register():
 
 
 
+@app.route('/actualize_product.html', methods=['GET', 'POST'])
+def actualize_product():
+	if request.method == 'POST':
+		query1 = """
+			SELECT id FROM BD.producto
+			WHERE id=""" + str(request.form['product_id'])
+		conection = connect()
+		resultt = conection.execute(query1)[0]
+		return redirect(url_for('edit_product', resultado = resultt))
+
+
+	query = "SELECT * FROM BD.Producto ALLOW FILTERING; "
+	conection = connect()
+	result = conection.execute(query)
+	return render_template('actualize_product.html', products = result)
+
+
 
 @app.route('/register_client_page.html', methods = ['GET', 'POST'])
 def registerClient():
