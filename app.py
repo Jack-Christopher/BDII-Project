@@ -6,6 +6,9 @@ from datetime import datetime
 from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
 from flask import Flask, render_template, request, send_from_directory , redirect, session
+from flask import session, url_for
+import ast
+
 
 # Global values :
 cluster = Cluster(contact_points=['127.0.0.1'], port=9042)
@@ -157,23 +160,6 @@ def register():
 
 
 
-@app.route('/actualize_product.html', methods=['GET', 'POST'])
-def actualize_product():
-	if request.method == 'POST':
-		query1 = """
-			SELECT id FROM BD.producto
-			WHERE id=""" + str(request.form['product_id'])
-		conection = connect()
-		resultt = conection.execute(query1)[0]
-		return redirect(url_for('edit_product', resultado = resultt))
-
-
-	query = "SELECT * FROM BD.Producto ALLOW FILTERING; "
-	conection = connect()
-	result = conection.execute(query)
-	return render_template('actualize_product.html', products = result)
-
-
 
 @app.route('/register_client_page.html', methods = ['GET', 'POST'])
 def registerClient():
@@ -283,7 +269,6 @@ def client_view():
 						total = "0.0")
 
 
-
 @app.route('/edit_product.html', methods=['GET', 'POST'])
 def edit_product():
 	print("edit")
@@ -309,6 +294,22 @@ def edit_product():
 
 	return render_template('edit_product.html', resultado = result)
 
+
+@app.route('/actualize_product.html', methods=['GET', 'POST'])
+def actualize_product():
+	if request.method == 'POST':
+		query1 = """
+			SELECT id FROM BD.producto
+			WHERE id=""" + str(request.form['product_id'])
+		conection = connect()
+		resultt = conection.execute(query1)[0]
+		return redirect(url_for('edit_product', resultado = resultt))
+
+
+	query = "SELECT * FROM BD.Producto ALLOW FILTERING; "
+	conection = connect()
+	result = conection.execute(query)
+	return render_template('actualize_product.html', products = result)
 
 
 
