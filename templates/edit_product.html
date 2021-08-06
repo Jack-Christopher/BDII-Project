@@ -1,0 +1,104 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Tienda XYZ</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/index.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <link rel="shortcut icon" type="image/jpg" href="{{ url_for('static',filename='Images/icon.jpg') }}">
+  
+  </head>
+  
+  <body>
+  
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  
+      <div class="container-fluid">
+  
+        <div class="collapse navbar-collapse" id="navbar">
+          <div class="navbar-nav">
+            <a class="nav-link active" href="#">Inicio</a>
+            <a class="nav-link" href="#">ABCD</a>
+            <a class="nav-link" href="#">DEFG</a>
+            <a class="nav-link" href="#">HIJK</a>
+          </div>
+        </div>
+      </div>
+  
+    </nav>
+  
+  
+  
+    <div class="jumbotron" id="all_content" style="background:#cfe7ff">
+  
+      <h1 class="display-3" align="center"> Editar un producto </h1>
+  
+      <br><br>
+      
+  
+      <div class="container" align="center">
+
+          <h2>Id del producto: {{resultado.id}} </h2> <br>
+          <form action="" method="post" onsubmit="return formEsValido()">
+            <label for="product_name"> Nuevo nombre del Producto: </label>
+            <input type="text" name="product_name" id="product_name" class="form-control">
+            <label for="product_price"> Nuevo precio del Producto: </label>
+            <input type="text" name="product_price" id="product_price" class="form-control">
+            <label for="descripction"> Nueva descripcion del Producto: </label>
+            <input type="text" name="description" id="description" class="form-control">
+            <label for="stock">Nuevo stock del Producto</label>
+            <input type="text" name="stock" id="stock" class="form-control">
+            <br>  
+            <button class="btn btn-primary"id="index-buttons" type="submit">Editar Producto</button>              
+          </form>
+      </div>
+      
+      <div align="right">
+        <a href="actualize_product.html" class="btn btn-danger"> Regresar </a>        
+        
+      </div>
+      
+    </div>
+  </div>
+  </body>
+  </html>
+
+
+
+
+  <script>
+
+
+    function formEsValido()
+    {
+        var nombre = $("#product_name");
+        var precio = $("#product_price");
+        var descripcion = $("#description");
+        var stock = $("#stock");
+
+        else if( nombre.val() == "")
+        {
+            var op = alertify.alert("Debe colocar su nombre." );
+            return false;
+        }
+        else if( descripcion.val() == "")
+        {
+            var op = alertify.alert("Debe colocar su descripcion.");
+            return false;
+        }
+        else if( precio.val() == "")
+        {
+            var op = alertify.alert("Debe colocar su precio.");
+            return false;
+        }
+        else if( stock.val() == "")
+        {
+            var op = alertify.alert("Debe colocar su Stock." );
+            return false;
+        }
+
+        return true;
+    }
+
+</script>
