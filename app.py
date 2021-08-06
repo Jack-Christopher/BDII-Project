@@ -284,6 +284,30 @@ def client_view():
 
 
 
+@app.route('/edit_product.html', methods=['GET', 'POST'])
+def edit_product():
+	print("edit")
+	id = (request.args.get('resultado'))
+	result = ast.literal_eval(id)
+	if request.method == 'POST':
+		conection = connect()
+		nombre = request.form['product_name']
+		precio = request.form['product_price']
+		descripcion = request.form['description']
+		stock = request.form['stock']
+		query1= """
+		UPDATE BD.producto SET 
+		descripcion = '"""+descripcion+"""',
+		nombre = '"""+nombre+"""',
+		precio = """+precio+ """,
+		stock = """+ stock + """
+		WHERE id = """ + str(result['id']) + """ 
+		"""
+		conection.execute(query1)
+		
+		return redirect("/actualize_product.html")
+
+	return render_template('edit_product.html', resultado = result)
 
 
 
